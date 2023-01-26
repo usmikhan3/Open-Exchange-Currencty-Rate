@@ -13,7 +13,6 @@ class InterstitialAdPage extends StatefulWidget {
 
 class _InterstitialAdPageState extends State<InterstitialAdPage> {
   late InterstitialAd interstitialAd;
-
   var interstitialId = "ca-app-pub-3940256099942544/1033173712";
 
   bool isAdLoaded = true;
@@ -40,6 +39,7 @@ class _InterstitialAdPageState extends State<InterstitialAdPage> {
 
     );
   }
+
 
   @override
   void initState() {

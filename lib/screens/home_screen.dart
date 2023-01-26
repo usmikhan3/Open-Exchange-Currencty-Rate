@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:currency_rate/model/rates_model.dart';
 import 'package:currency_rate/services/api_services.dart';
 import 'package:currency_rate/widgets/any_to_any.dart';
@@ -13,11 +15,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+
+  late Future<Map> allCurrencies;
+  late Future<RatesModel> result;
+  final formKey = GlobalKey<FormState>();
+
+  //TODO: BANNER AD
   late BannerAd bannerAd;
   var adUnitId = "ca-app-pub-3940256099942544/6300978111"; //testADID
-
   bool isAdLoaded = false;
-
   initBannerAd() async {
     bannerAd = BannerAd(
       size: AdSize.fullBanner,
@@ -43,9 +50,36 @@ class _HomeScreenState extends State<HomeScreen> {
     bannerAd.load();
   }
 
-  late Future<Map> allCurrencies;
-  late Future<RatesModel> result;
-  final formKey = GlobalKey<FormState>();
+  //TODO: INTERSTITIAL AD
+  late InterstitialAd interstitialAd;
+  var interstitialId = "ca-app-pub-3940256099942544/1033173712";
+
+  bool isAdInterstitialLoaded = true;
+
+  initInterstitialAd() {
+    InterstitialAd.load(
+
+      adUnitId: interstitialId,
+      request: AdRequest(),
+
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad){
+          interstitialAd = ad;
+          setState(() {
+            isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: ((error){
+          interstitialAd.dispose();
+          print(error);
+        }),
+
+      ),
+
+    );
+  }
+
+
 
   @override
   void initState() {
@@ -58,6 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     initBannerAd();
+    initInterstitialAd();
+
+    Timer(const Duration(seconds: 2), (){
+      interstitialAd.show();
+    });
   }
 
   @override
